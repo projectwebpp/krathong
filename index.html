@@ -36,11 +36,12 @@
         .river-container {
             position: relative;
             width: 100%;
-            height: 200px;
+            height: 250px;
             overflow: hidden;
             margin: 20px 0;
             border-radius: 15px;
             background: linear-gradient(to bottom, #1e40af, #3b82f6, #60a5fa);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
         }
         
         .floating-krathongs {
@@ -52,20 +53,60 @@
             pointer-events: none;
         }
         
-        .krathong {
+        .krathong-item {
             position: absolute;
-            width: 50px;
-            height: 50px;
-            transition: all 8s linear;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            width: 80px;
+            height: 100px;
+            transition: all 0.3s ease;
             z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
-        .krathong-1 { background: radial-gradient(circle, #ff9ff3, #f368e0); }
-        .krathong-2 { background: radial-gradient(circle, #ff9f43, #ff6b6b); }
-        .krathong-3 { background: radial-gradient(circle, #54a0ff, #5f27cd); }
-        .krathong-4 { background: radial-gradient(circle, #00d2d3, #54a0ff); }
-        .krathong-5 { background: radial-gradient(circle, #feca57, #ff9ff3); }
+        .profile-krathong {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            margin-bottom: 5px;
+            object-fit: cover;
+        }
+        
+        .wish-bubble {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1f2937;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            max-width: 120px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fbbf24;
+            position: relative;
+            word-break: break-word;
+        }
+        
+        .wish-bubble:after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fbbf24;
+        }
+        
+        .krathong-base {
+            width: 40px;
+            height: 20px;
+            border-radius: 50%;
+            margin-top: 5px;
+        }
         
         .lotus-container {
             position: relative;
@@ -97,6 +138,20 @@
             z-index: 3;
             transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .user-profile-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            margin-bottom: 10px;
+            object-fit: cover;
+            z-index: 5;
         }
         
         .lotus-base {
@@ -108,6 +163,7 @@
                 0 0 30px rgba(251, 191, 36, 0.6),
                 inset 0 -10px 20px rgba(180, 83, 9, 0.4);
             z-index: 2;
+            bottom: 0;
         }
         
         .lotus-petals {
@@ -115,6 +171,7 @@
             width: 100%;
             height: 100%;
             animation: lotusFloat 3s ease-in-out infinite;
+            bottom: 0;
         }
         
         .petal {
@@ -162,7 +219,7 @@
         
         .wish-message {
             position: absolute;
-            bottom: 180px;
+            bottom: 200px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(254, 243, 199, 0.9));
@@ -337,6 +394,15 @@
             font-weight: 600;
         }
 
+        .wish-counter {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(2deg); }
@@ -402,21 +468,12 @@
             display: block;
         }
         
-        .krathong-type-1 {
-            background: radial-gradient(circle, #ff9ff3, #f368e0);
-        }
-        .krathong-type-2 {
-            background: radial-gradient(circle, #ff9f43, #ff6b6b);
-        }
-        .krathong-type-3 {
-            background: radial-gradient(circle, #54a0ff, #5f27cd);
-        }
-        .krathong-type-4 {
-            background: radial-gradient(circle, #00d2d3, #54a0ff);
-        }
-        .krathong-type-5 {
-            background: radial-gradient(circle, #feca57, #ff9ff3);
-        }
+        .krathong-type-1 { background: radial-gradient(circle, #ff9ff3, #f368e0); }
+        .krathong-type-2 { background: radial-gradient(circle, #ff9f43, #ff6b6b); }
+        .krathong-type-3 { background: radial-gradient(circle, #54a0ff, #5f27cd); }
+        .krathong-type-4 { background: radial-gradient(circle, #00d2d3, #54a0ff); }
+        .krathong-type-5 { background: radial-gradient(circle, #feca57, #ff9ff3); }
+        .krathong-type-6 { background: radial-gradient(circle, #a3cb38, #badc58); }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
@@ -440,6 +497,12 @@
             <i class="fas fa-water mr-2"></i>
             กระทงของผู้เข้าร่วมคนอื่นๆ
         </div>
+        
+        <div class="wish-counter">
+            <i class="fas fa-heart text-red-400 mr-2"></i>
+            <span id="wishCount">0</span> คำอวยพรในแม่น้ำ
+        </div>
+        
         <div class="river-container">
             <div class="floating-krathongs" id="floatingKrathongs">
                 <!-- กระทงจะถูกเพิ่มโดย JavaScript -->
@@ -450,6 +513,7 @@
             <div class="stars" id="stars"></div>
             <div class="moon"></div>
             <div class="lotus" id="lotus">
+                <img id="currentUserProfile" class="user-profile-img" src="" alt="Profile">
                 <div class="lotus-petals">
                     <div class="petal"></div>
                     <div class="petal"></div>
@@ -513,7 +577,7 @@
                         <div class="krathong-option krathong-type-5" data-type="5">
                             <i class="fas fa-gem"></i>
                         </div>
-                        <div class="krathong-option krathong-type-1" data-type="6">
+                        <div class="krathong-option krathong-type-6" data-type="6">
                             <i class="fas fa-leaf"></i>
                         </div>
                     </div>
@@ -563,15 +627,58 @@
         let liffInitialized = false;
         let userEmail = '';
         let selectedKrathongType = 1;
-        let otherWishes = [];
+        let allWishes = [];
 
         // ตัวอย่างคำอวยพรจากคนอื่น (ในระบบจริงจะดึงจาก Google Sheets)
         const sampleWishes = [
-            { name: "น้องพลอย", wish: "ขอให้ครอบครัวมีความสุข", type: 1 },
-            { name: "คุณป้า", wish: "สุขภาพแข็งแรง", type: 2 },
-            { name: "น้องน้ำ", wish: "สอบติดมหาวิทยาลัย", type: 3 },
-            { name: "พี่เอก", wish: "ธุรกิจรุ่งเรือง", type: 4 },
-            { name: "คุณลุง", wish: "พบความสุขในชีวิต", type: 5 }
+            { 
+                name: "น้องพลอย", 
+                wish: "ขอให้ครอบครัวมีความสุข", 
+                type: 1, 
+                picture: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" 
+            },
+            { 
+                name: "คุณป้า", 
+                wish: "สุขภาพแข็งแรง", 
+                type: 2, 
+                picture: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" 
+            },
+            { 
+                name: "น้องน้ำ", 
+                wish: "สอบติดมหาวิทยาลัย", 
+                type: 3, 
+                picture: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face" 
+            },
+            { 
+                name: "พี่เอก", 
+                wish: "ธุรกิจรุ่งเรือง", 
+                type: 4, 
+                picture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" 
+            },
+            { 
+                name: "คุณลุง", 
+                wish: "พบความสุขในชีวิต", 
+                type: 5, 
+                picture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" 
+            },
+            { 
+                name: "น้องมายด์", 
+                wish: "ได้เที่ยวรอบโลก", 
+                type: 6, 
+                picture: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" 
+            },
+            { 
+                name: "พี่โบ๊ท", 
+                wish: "งานใหม่ราบรื่น", 
+                type: 1, 
+                picture: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" 
+            },
+            { 
+                name: "น้องฟ้า", 
+                wish: "เจอเนื้อคู่เร็วๆ", 
+                type: 2, 
+                picture: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=100&h=100&fit=crop&crop=face" 
+            }
         ];
 
         // สร้างดาวบนท้องฟ้า
@@ -594,14 +701,53 @@
         // สร้างกระทงลอยในแม่น้ำ
         function createFloatingKrathongs() {
             const container = document.getElementById('floatingKrathongs');
-            sampleWishes.forEach((wish, index) => {
-                const krathong = document.createElement('div');
-                krathong.className = `krathong krathong-${wish.type}`;
-                krathong.style.animation = `floatRiver ${15 + index * 2}s linear infinite`;
-                krathong.style.animationDelay = `${index * 3}s`;
-                krathong.title = `${wish.name}: ${wish.wish}`;
-                container.appendChild(krathong);
+            container.innerHTML = '';
+            
+            allWishes.forEach((wish, index) => {
+                const krathongItem = document.createElement('div');
+                krathongItem.className = `krathong-item`;
+                
+                // สุ่มตำแหน่งและความล่าช้า
+                const startDelay = Math.random() * 10;
+                const duration = 20 + Math.random() * 10;
+                const startTop = 30 + Math.random() * 120;
+                
+                krathongItem.style.animation = `floatRiver ${duration}s linear infinite`;
+                krathongItem.style.animationDelay = `${startDelay}s`;
+                krathongItem.style.top = `${startTop}px`;
+                
+                // สร้างองค์ประกอบกระทง
+                krathongItem.innerHTML = `
+                    <div class="wish-bubble">
+                        <strong>${wish.name}</strong>
+                        <div class="text-xs mt-1">${wish.wish}</div>
+                    </div>
+                    <img src="${wish.picture}" alt="${wish.name}" class="profile-krathong">
+                    <div class="krathong-base krathong-type-${wish.type}"></div>
+                `;
+                
+                container.appendChild(krathongItem);
             });
+            
+            // อัปเดตจำนวนคำอวยพร
+            document.getElementById('wishCount').textContent = allWishes.length;
+        }
+        
+        // โหลดคำอวยพรจากเซิร์ฟเวอร์
+        async function loadWishesFromServer() {
+            try {
+                // ในระบบจริงจะดึงจาก Google Apps Script
+                // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL/getWishes');
+                // const wishes = await response.json();
+                
+                // ใช้ตัวอย่างข้อมูลชั่วคราว
+                allWishes = [...sampleWishes];
+                createFloatingKrathongs();
+            } catch (error) {
+                console.error('Error loading wishes:', error);
+                allWishes = [...sampleWishes];
+                createFloatingKrathongs();
+            }
         }
         
         // เริ่มต้น LIFF พร้อม scope email
@@ -639,6 +785,7 @@
                 
                 if (userProfile.pictureUrl) {
                     document.getElementById('userPicture').src = userProfile.pictureUrl;
+                    document.getElementById('currentUserProfile').src = userProfile.pictureUrl;
                 }
                 
                 // ดึงอีเมลจาก LINE
@@ -726,20 +873,28 @@
         }
         
         // ฟังก์ชันลอยกระทง
-        function floatLotus(wishText) {
+        function floatLotus(wishText, userName, userPicture) {
             const lotus = document.getElementById('lotus');
             const wishMessage = document.getElementById('wishMessage');
             
             // อัปเดตสีกระทงตามที่เลือก
             updateLotusColor(selectedKrathongType);
             
+            // อัปเดตโปรไฟล์ผู้ใช้
+            if (userPicture) {
+                document.getElementById('currentUserProfile').src = userPicture;
+            }
+            
             // แสดงคำอวยพร
-            wishMessage.textContent = wishText;
+            wishMessage.innerHTML = `
+                <strong>${userName}</strong><br>
+                ${wishText}
+            `;
             wishMessage.classList.add('show');
             
             // เริ่มแอนิเมชันลอยกระทง
             lotus.style.transition = 'all 4s cubic-bezier(0.4, 0, 0.2, 1)';
-            lotus.style.bottom = '250px';
+            lotus.style.bottom = '220px';
             lotus.style.transform = 'translateX(-50%) rotate(5deg) scale(1.1)';
             
             setTimeout(() => {
@@ -787,6 +942,19 @@
             petals.forEach(petal => {
                 petal.style.background = `linear-gradient(135deg, #fef3c7, ${color.petal})`;
             });
+        }
+        
+        // เพิ่มกระทงใหม่ลงในแม่น้ำ
+        function addNewKrathongToRiver(name, wish, picture, type) {
+            const newWish = {
+                name: name,
+                wish: wish,
+                picture: picture || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face',
+                type: type
+            };
+            
+            allWishes.push(newWish);
+            createFloatingKrathongs();
         }
         
         // ส่ง Flex Message ไปยัง LINE
@@ -930,14 +1098,18 @@
             
             try {
                 const formData = new FormData(this);
+                const userName = formData.get('name');
+                const userWish = formData.get('wish');
+                const userPicture = userProfile ? userProfile.pictureUrl : '';
+                
                 const requestData = {
-                    name: formData.get('name'),
+                    name: userName,
                     email: userEmail || formData.get('email'),
-                    wish: formData.get('wish'),
+                    wish: userWish,
                     krathong_type: selectedKrathongType,
                     line_user_id: userProfile ? userProfile.userId : 'N/A',
                     line_display_name: userProfile ? userProfile.displayName : 'N/A',
-                    line_picture_url: userProfile ? userProfile.pictureUrl : 'N/A',
+                    line_picture_url: userPicture,
                     timestamp: new Date().toISOString()
                 };
                 
@@ -955,14 +1127,21 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    floatLotus(requestData.wish);
+                    // แสดงแอนิเมชันลอยกระทง
+                    floatLotus(userWish, userName, userPicture);
+                    
+                    // เพิ่มกระทงใหม่ลงในแม่น้ำ
+                    addNewKrathongToRiver(userName, userWish, userPicture, selectedKrathongType);
+                    
+                    // แสดงข้อความสำเร็จ
                     successMessage.style.display = 'block';
                     
+                    // รีเซ็ตฟอร์ม
                     document.getElementById('name').value = '';
                     document.getElementById('wish').value = '';
                     
                     // ส่ง Flex Message
-                    await sendFlexMessage(requestData.name, requestData.wish, selectedKrathongType);
+                    await sendFlexMessage(userName, userWish, selectedKrathongType);
                     
                 } else {
                     showMessage(data.message, 'error');
@@ -992,7 +1171,7 @@
         // เริ่มต้นแอปพลิเคชัน
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
-            createFloatingKrathongs();
+            loadWishesFromServer();
             initializeLiff();
         });
     </script>
