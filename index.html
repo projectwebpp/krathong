@@ -33,10 +33,44 @@
             background-clip: text;
         }
         
+        .river-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            margin: 20px 0;
+            border-radius: 15px;
+            background: linear-gradient(to bottom, #1e40af, #3b82f6, #60a5fa);
+        }
+        
+        .floating-krathongs {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .krathong {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            transition: all 8s linear;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            z-index: 2;
+        }
+        
+        .krathong-1 { background: radial-gradient(circle, #ff9ff3, #f368e0); }
+        .krathong-2 { background: radial-gradient(circle, #ff9f43, #ff6b6b); }
+        .krathong-3 { background: radial-gradient(circle, #54a0ff, #5f27cd); }
+        .krathong-4 { background: radial-gradient(circle, #00d2d3, #54a0ff); }
+        .krathong-5 { background: radial-gradient(circle, #feca57, #ff9ff3); }
+        
         .lotus-container {
             position: relative;
             width: 100%;
-            height: 400px;
+            height: 300px;
             overflow: hidden;
             margin: 20px 0;
             perspective: 1000px;
@@ -65,15 +99,10 @@
             cursor: pointer;
         }
         
-        .lotus:hover {
-            transform: translateX(-50%) scale(1.05);
-        }
-        
         .lotus-base {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 30%, #fbbf24, #d97706);
             border-radius: 50% 50% 40% 40%;
             box-shadow: 
                 0 0 30px rgba(251, 191, 36, 0.6),
@@ -92,7 +121,6 @@
             position: absolute;
             width: 50px;
             height: 70px;
-            background: linear-gradient(135deg, #fef3c7, #fbbf24);
             border-radius: 50%;
             transform-origin: center bottom;
             box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
@@ -111,7 +139,6 @@
             position: absolute;
             width: 12px;
             height: 30px;
-            background: linear-gradient(to bottom, #fef3c7, #d97706);
             top: -40px;
             left: 50%;
             transform: translateX(-50%);
@@ -124,7 +151,6 @@
             position: absolute;
             width: 16px;
             height: 25px;
-            background: radial-gradient(ellipse at center, #fef3c7 0%, #f59e0b 50%, #dc2626 100%);
             border-radius: 50% 50% 20% 20%;
             top: -65px;
             left: 50%;
@@ -136,7 +162,7 @@
         
         .wish-message {
             position: absolute;
-            bottom: 200px;
+            bottom: 180px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(254, 243, 199, 0.9));
@@ -276,6 +302,40 @@
         .email-not-available {
             color: #f59e0b;
         }
+        
+        .krathong-selection {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .krathong-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .krathong-option.selected {
+            border-color: #f59e0b;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+        }
+        
+        .other-wishes-title {
+            text-align: center;
+            margin: 30px 0 15px 0;
+            font-size: 1.2rem;
+            color: #fbbf24;
+            font-weight: 600;
+        }
 
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -313,6 +373,14 @@
             to { transform: translateY(0); opacity: 1; }
         }
         
+        @keyframes floatRiver {
+            0% { transform: translateX(-100px) translateY(0px) rotate(0deg); }
+            25% { transform: translateX(25vw) translateY(-10px) rotate(5deg); }
+            50% { transform: translateX(50vw) translateY(0px) rotate(0deg); }
+            75% { transform: translateX(75vw) translateY(-8px) rotate(-5deg); }
+            100% { transform: translateX(100vw) translateY(0px) rotate(0deg); }
+        }
+        
         .input-field {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -333,6 +401,22 @@
         .loading-spinner.show {
             display: block;
         }
+        
+        .krathong-type-1 {
+            background: radial-gradient(circle, #ff9ff3, #f368e0);
+        }
+        .krathong-type-2 {
+            background: radial-gradient(circle, #ff9f43, #ff6b6b);
+        }
+        .krathong-type-3 {
+            background: radial-gradient(circle, #54a0ff, #5f27cd);
+        }
+        .krathong-type-4 {
+            background: radial-gradient(circle, #00d2d3, #54a0ff);
+        }
+        .krathong-type-5 {
+            background: radial-gradient(circle, #feca57, #ff9ff3);
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
@@ -350,6 +434,17 @@
         
         <h1 class="title text-4xl text-center mb-2 floating">ลอยกระทงออนไลน์</h1>
         <p class="text-center text-yellow-200 mb-8">ส่งความปรารถนาดีผ่านกระทงออนไลน์</p>
+        
+        <!-- แสดงกระทงของคนอื่น -->
+        <div class="other-wishes-title">
+            <i class="fas fa-water mr-2"></i>
+            กระทงของผู้เข้าร่วมคนอื่นๆ
+        </div>
+        <div class="river-container">
+            <div class="floating-krathongs" id="floatingKrathongs">
+                <!-- กระทงจะถูกเพิ่มโดย JavaScript -->
+            </div>
+        </div>
         
         <div class="lotus-container">
             <div class="stars" id="stars"></div>
@@ -398,6 +493,32 @@
                     </div>
                 </div>
                 
+                <div class="mb-4">
+                    <label class="block text-white mb-2 font-semibold">
+                        <i class="fas fa-palette mr-2"></i>เลือกรูปแบบกระทง
+                    </label>
+                    <div class="krathong-selection">
+                        <div class="krathong-option krathong-type-1 selected" data-type="1">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="krathong-option krathong-type-2" data-type="2">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="krathong-option krathong-type-3" data-type="3">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div class="krathong-option krathong-type-4" data-type="4">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="krathong-option krathong-type-5" data-type="5">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="krathong-option krathong-type-1" data-type="6">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="mb-6">
                     <label class="block text-white mb-2 font-semibold" for="wish">
                         <i class="fas fa-pencil-alt mr-2"></i>คำอวยพร
@@ -441,6 +562,17 @@
         let userProfile = null;
         let liffInitialized = false;
         let userEmail = '';
+        let selectedKrathongType = 1;
+        let otherWishes = [];
+
+        // ตัวอย่างคำอวยพรจากคนอื่น (ในระบบจริงจะดึงจาก Google Sheets)
+        const sampleWishes = [
+            { name: "น้องพลอย", wish: "ขอให้ครอบครัวมีความสุข", type: 1 },
+            { name: "คุณป้า", wish: "สุขภาพแข็งแรง", type: 2 },
+            { name: "น้องน้ำ", wish: "สอบติดมหาวิทยาลัย", type: 3 },
+            { name: "พี่เอก", wish: "ธุรกิจรุ่งเรือง", type: 4 },
+            { name: "คุณลุง", wish: "พบความสุขในชีวิต", type: 5 }
+        ];
 
         // สร้างดาวบนท้องฟ้า
         function createStars() {
@@ -459,17 +591,29 @@
             }
         }
         
+        // สร้างกระทงลอยในแม่น้ำ
+        function createFloatingKrathongs() {
+            const container = document.getElementById('floatingKrathongs');
+            sampleWishes.forEach((wish, index) => {
+                const krathong = document.createElement('div');
+                krathong.className = `krathong krathong-${wish.type}`;
+                krathong.style.animation = `floatRiver ${15 + index * 2}s linear infinite`;
+                krathong.style.animationDelay = `${index * 3}s`;
+                krathong.title = `${wish.name}: ${wish.wish}`;
+                container.appendChild(krathong);
+            });
+        }
+        
         // เริ่มต้น LIFF พร้อม scope email
         async function initializeLiff() {
             try {
                 await liff.init({ 
-                    liffId: "1661009147-gKYqxqQ3"  // ใส่ LIFF ID ของคุณที่นี่
+                    liffId: "1661009147-gKYqxqQ3"
                 });
                 console.log("LIFF เริ่มต้นสำเร็จ");
                 liffInitialized = true;
                 
                 if (!liff.isLoggedIn()) {
-                    // ล็อกอินด้วย scope email
                     liff.login({
                         scope: 'profile openid email'
                     });
@@ -512,21 +656,10 @@
         // ฟังก์ชันดึงอีเมลจาก LINE
         async function getUserEmail() {
             try {
-                // ใช้ LIFF API เพื่อดึงอีเมล
                 const idToken = liff.getIDToken();
                 if (idToken) {
-                    // ส่ง request ไปยัง LIFF API เพื่อดึงข้อมูลอีเมล
-                    const profile = await liff.getProfile();
-                    console.log("Profile with ID Token:", profile);
-                    
-                    // พยายามดึงอีเมลจาก context หรือ ID Token
-                    const context = liff.getContext();
-                    console.log("LIFF Context:", context);
-                    
-                    // วิธีที่ 1: ใช้ข้อมูลจาก ID Token (ถ้ามี)
                     if (liff.isLoggedIn()) {
                         try {
-                            // สำหรับ LINE Login v2.1 ขึ้นไป
                             const decodedToken = liff.getDecodedIDToken();
                             console.log("Decoded ID Token:", decodedToken);
                             
@@ -540,7 +673,6 @@
                         }
                     }
                     
-                    // วิธีที่ 2: สร้างอีเมลจาก user ID
                     userEmail = `${userProfile.userId}@line.me`;
                     updateEmailField(userEmail, false);
                     
@@ -598,26 +730,26 @@
             const lotus = document.getElementById('lotus');
             const wishMessage = document.getElementById('wishMessage');
             
+            // อัปเดตสีกระทงตามที่เลือก
+            updateLotusColor(selectedKrathongType);
+            
             // แสดงคำอวยพร
             wishMessage.textContent = wishText;
             wishMessage.classList.add('show');
             
             // เริ่มแอนิเมชันลอยกระทง
             lotus.style.transition = 'all 4s cubic-bezier(0.4, 0, 0.2, 1)';
-            lotus.style.bottom = '320px';
+            lotus.style.bottom = '250px';
             lotus.style.transform = 'translateX(-50%) rotate(5deg) scale(1.1)';
             
-            // เคลื่อนกระทงไปทางขวา
             setTimeout(() => {
                 lotus.style.transform = 'translateX(30%) rotate(-3deg) scale(1.05)';
             }, 1500);
             
-            // เคลื่อนกระทงไปทางซ้าย
             setTimeout(() => {
                 lotus.style.transform = 'translateX(-130%) rotate(8deg) scale(0.9)';
             }, 3000);
             
-            // รีเซ็ตหลังจากสิ้นสุดแอนิเมชัน
             setTimeout(() => {
                 wishMessage.classList.remove('show');
                 lotus.style.transition = 'none';
@@ -630,9 +762,152 @@
             }, 4500);
         }
         
+        // อัปเดตสีกระทงตามประเภทที่เลือก
+        function updateLotusColor(type) {
+            const lotusBase = document.querySelector('.lotus-base');
+            const petals = document.querySelectorAll('.petal');
+            const candle = document.querySelector('.candle');
+            const flame = document.querySelector('.flame');
+            
+            const colors = {
+                1: { base: '#ff9ff3', petal: '#f368e0', candle: '#ff9f43', flame: '#ff6b6b' },
+                2: { base: '#ff9f43', petal: '#ff6b6b', candle: '#54a0ff', flame: '#5f27cd' },
+                3: { base: '#54a0ff', petal: '#5f27cd', candle: '#00d2d3', flame: '#54a0ff' },
+                4: { base: '#00d2d3', petal: '#54a0ff', candle: '#feca57', flame: '#ff9ff3' },
+                5: { base: '#feca57', petal: '#ff9ff3', candle: '#ff9ff3', flame: '#f368e0' },
+                6: { base: '#a3cb38', petal: '#badc58', candle: '#f6e58d', flame: '#ffbe76' }
+            };
+            
+            const color = colors[type] || colors[1];
+            
+            lotusBase.style.background = `radial-gradient(circle at 30% 30%, ${color.base}, ${color.petal})`;
+            candle.style.background = `linear-gradient(to bottom, #fef3c7, ${color.candle})`;
+            flame.style.background = `radial-gradient(ellipse at center, #fef3c7 0%, ${color.candle} 50%, ${color.flame} 100%)`;
+            
+            petals.forEach(petal => {
+                petal.style.background = `linear-gradient(135deg, #fef3c7, ${color.petal})`;
+            });
+        }
+        
+        // ส่ง Flex Message ไปยัง LINE
+        async function sendFlexMessage(userName, wish, krathongType) {
+            if (!liff.isInClient()) return;
+            
+            try {
+                const flexMessage = {
+                    type: 'flex',
+                    altText: `${userName} ได้ลอยกระทงออนไลน์!`,
+                    contents: {
+                        type: "bubble",
+                        size: "mega",
+                        header: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: "🎉 ลอยกระทงสำเร็จ!",
+                                    weight: "bold",
+                                    size: "xl",
+                                    color: "#FFFFFF",
+                                    align: "center"
+                                }
+                            ],
+                            backgroundColor: "#FF6B6B",
+                            paddingAll: "20px"
+                        },
+                        hero: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "image",
+                                    url: "https://i.imgur.com/8SfQ1tq.png",
+                                    size: "full",
+                                    aspectMode: "cover",
+                                    aspectRatio: "1:1"
+                                }
+                            ]
+                        },
+                        body: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: `จาก: ${userName}`,
+                                    weight: "bold",
+                                    size: "lg",
+                                    margin: "md"
+                                },
+                                {
+                                    type: "separator",
+                                    margin: "lg"
+                                },
+                                {
+                                    type: "text",
+                                    text: "คำอวยพร:",
+                                    weight: "bold",
+                                    size: "md",
+                                    margin: "lg"
+                                },
+                                {
+                                    type: "text",
+                                    text: wish,
+                                    wrap: true,
+                                    margin: "sm",
+                                    color: "#666666"
+                                },
+                                {
+                                    type: "separator",
+                                    margin: "lg"
+                                },
+                                {
+                                    type: "text",
+                                    text: "ขอให้ความปรารถนาของคุณสมหวัง! 🌕",
+                                    size: "sm",
+                                    color: "#888888",
+                                    align: "center",
+                                    margin: "lg"
+                                }
+                            ]
+                        },
+                        footer: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "button",
+                                    action: {
+                                        type: "uri",
+                                        label: "ลอยกระทงด้วย",
+                                        uri: `https://liff.line.me/1661009147-gKYqxqQ3`
+                                    },
+                                    style: "primary",
+                                    color: "#FF6B6B"
+                                }
+                            ]
+                        },
+                        styles: {
+                            header: {
+                                backgroundColor: "#FF6B6B"
+                            },
+                            footer: {
+                                separator: true
+                            }
+                        }
+                    }
+                };
+                
+                await liff.sendMessages([flexMessage]);
+                console.log("ส่ง Flex Message สำเร็จ");
+            } catch (error) {
+                console.error("ส่ง Flex Message ล้มเหลว:", error);
+            }
+        }
+        
         // แสดงข้อความ
         function showMessage(message, type = 'info') {
-            // สามารถเพิ่มฟังก์ชันแสดงข้อความแจ้งเตือนได้ที่นี่
             console.log(`${type}: ${message}`);
         }
         
@@ -649,10 +924,7 @@
             const loadingSpinner = document.getElementById('loadingSpinner');
             const successMessage = document.getElementById('successMessage');
             
-            // ซ่อนข้อความสำเร็จเก่า
             successMessage.style.display = 'none';
-            
-            // แสดงสถานะกำลังส่ง
             submitBtn.style.display = 'none';
             loadingSpinner.classList.add('show');
             
@@ -660,8 +932,9 @@
                 const formData = new FormData(this);
                 const requestData = {
                     name: formData.get('name'),
-                    email: userEmail || formData.get('email'), // ใช้ email จาก LINE เป็นหลัก
+                    email: userEmail || formData.get('email'),
                     wish: formData.get('wish'),
+                    krathong_type: selectedKrathongType,
                     line_user_id: userProfile ? userProfile.userId : 'N/A',
                     line_display_name: userProfile ? userProfile.displayName : 'N/A',
                     line_picture_url: userProfile ? userProfile.pictureUrl : 'N/A',
@@ -682,27 +955,15 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // แสดงแอนิเมชัน
                     floatLotus(requestData.wish);
-                    
-                    // แสดงข้อความสำเร็จ
                     successMessage.style.display = 'block';
                     
-                    // รีเซ็ตฟอร์ม (แต่รักษาข้อมูลอีเมล)
                     document.getElementById('name').value = '';
                     document.getElementById('wish').value = '';
                     
-                    // ส่งข้อความขอบคุณถ้าเปิดใน LINE
-                    if (liff.isInClient()) {
-                        try {
-                            await liff.sendMessages([{
-                                type: 'text',
-                                text: `ขอบคุณ ${requestData.name} ที่ร่วมลอยกระทงออนไลน์! 🎉\nคำอวยพร: ${requestData.wish}\nขอให้ความปรารถนาของคุณสมหวัง! 🌕`
-                            }]);
-                        } catch (sendError) {
-                            console.log("ไม่สามารถส่งข้อความได้:", sendError);
-                        }
-                    }
+                    // ส่ง Flex Message
+                    await sendFlexMessage(requestData.name, requestData.wish, selectedKrathongType);
+                    
                 } else {
                     showMessage(data.message, 'error');
                 }
@@ -711,15 +972,27 @@
                 console.error('Error:', error);
                 showMessage('เกิดข้อผิดพลาดในการส่งข้อมูล: ' + error.message, 'error');
             } finally {
-                // รีเซ็ตปุ่ม
                 submitBtn.style.display = 'flex';
                 loadingSpinner.classList.remove('show');
             }
         });
         
+        // เลือกรูปแบบกระทง
+        document.querySelectorAll('.krathong-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.krathong-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedKrathongType = parseInt(this.dataset.type);
+                updateLotusColor(selectedKrathongType);
+            });
+        });
+        
         // เริ่มต้นแอปพลิเคชัน
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
+            createFloatingKrathongs();
             initializeLiff();
         });
     </script>
