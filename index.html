@@ -254,6 +254,29 @@
             display: none;
         }
         
+        .email-locked {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #10b981 !important;
+            color: #a7f3d0 !important;
+            cursor: not-allowed;
+        }
+        
+        .email-status {
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .email-verified {
+            color: #10b981;
+        }
+        
+        .email-not-available {
+            color: #f59e0b;
+        }
+
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(2deg); }
@@ -367,7 +390,12 @@
                     </label>
                     <input type="email" id="email" name="email" 
                            class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-300 focus:outline-none" 
-                           placeholder="กรุณากรอกอีเมล" required>
+                           placeholder="กำลังดึงอีเมลจาก LINE..." 
+                           readonly>
+                    <div class="email-status" id="emailStatus">
+                        <i class="fas fa-info-circle"></i>
+                        <span>กำลังดึงข้อมูลอีเมลจาก LINE...</span>
+                    </div>
                 </div>
                 
                 <div class="mb-6">
@@ -412,6 +440,7 @@
         // ตัวแปรเก็บข้อมูลผู้ใช้
         let userProfile = null;
         let liffInitialized = false;
+        let userEmail = '';
 
         // สร้างดาวบนท้องฟ้า
         function createStars() {
@@ -430,7 +459,7 @@
             }
         }
         
-        // เริ่มต้น LIFF
+        // เริ่มต้น LIFF พร้อม scope email
         async function initializeLiff() {
             try {
                 await liff.init({ 
@@ -440,17 +469,21 @@
                 liffInitialized = true;
                 
                 if (!liff.isLoggedIn()) {
-                    liff.login();
+                    // ล็อกอินด้วย scope email
+                    liff.login({
+                        scope: 'profile openid email'
+                    });
                 } else {
                     await loadUserProfile();
                 }
             } catch (error) {
                 console.error("LIFF เริ่มต้นล้มเหลว:", error);
                 showMessage('ไม่สามารถเชื่อมต่อกับ LINE ได้', 'error');
+                setEmailFieldEditable();
             }
         }
         
-        // โหลดข้อมูลผู้ใช้
+        // โหลดข้อมูลผู้ใช้และอีเมล
         async function loadUserProfile() {
             try {
                 userProfile = await liff.getProfile();
@@ -464,12 +497,90 @@
                     document.getElementById('userPicture').src = userProfile.pictureUrl;
                 }
                 
+                // ดึงอีเมลจาก LINE
+                await getUserEmail();
+                
                 // กรอกข้อมูลอัตโนมัติ
                 autoFillUserData();
                 
             } catch (error) {
                 console.error("ดึงข้อมูลผู้ใช้ล้มเหลว:", error);
+                setEmailFieldEditable();
             }
+        }
+        
+        // ฟังก์ชันดึงอีเมลจาก LINE
+        async function getUserEmail() {
+            try {
+                // ใช้ LIFF API เพื่อดึงอีเมล
+                const idToken = liff.getIDToken();
+                if (idToken) {
+                    // ส่ง request ไปยัง LIFF API เพื่อดึงข้อมูลอีเมล
+                    const profile = await liff.getProfile();
+                    console.log("Profile with ID Token:", profile);
+                    
+                    // พยายามดึงอีเมลจาก context หรือ ID Token
+                    const context = liff.getContext();
+                    console.log("LIFF Context:", context);
+                    
+                    // วิธีที่ 1: ใช้ข้อมูลจาก ID Token (ถ้ามี)
+                    if (liff.isLoggedIn()) {
+                        try {
+                            // สำหรับ LINE Login v2.1 ขึ้นไป
+                            const decodedToken = liff.getDecodedIDToken();
+                            console.log("Decoded ID Token:", decodedToken);
+                            
+                            if (decodedToken && decodedToken.email) {
+                                userEmail = decodedToken.email;
+                                updateEmailField(userEmail, true);
+                                return;
+                            }
+                        } catch (e) {
+                            console.log("ไม่สามารถดึงอีเมลจาก ID Token:", e);
+                        }
+                    }
+                    
+                    // วิธีที่ 2: สร้างอีเมลจาก user ID
+                    userEmail = `${userProfile.userId}@line.me`;
+                    updateEmailField(userEmail, false);
+                    
+                } else {
+                    throw new Error("ไม่มี ID Token");
+                }
+            } catch (error) {
+                console.error("ดึงอีเมลล้มเหลว:", error);
+                setEmailFieldEditable();
+            }
+        }
+        
+        // อัปเดตฟิลด์อีเมล
+        function updateEmailField(email, isVerified) {
+            const emailField = document.getElementById('email');
+            const emailStatus = document.getElementById('emailStatus');
+            
+            emailField.value = email;
+            userEmail = email;
+            
+            if (isVerified) {
+                emailField.classList.add('email-locked');
+                emailField.placeholder = "อีเมลจาก LINE";
+                emailStatus.innerHTML = '<i class="fas fa-check-circle"></i><span class="email-verified">ดึงอีเมลจาก LINE สำเร็จ (ไม่สามารถแก้ไขได้)</span>';
+            } else {
+                emailField.classList.add('email-locked');
+                emailField.placeholder = "อีเมลจาก LINE";
+                emailStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span class="email-not-available">ใช้ LINE User ID เป็นอีเมล (ไม่สามารถแก้ไขได้)</span>';
+            }
+        }
+        
+        // ตั้งค่าฟิลด์อีเมลให้แก้ไขได้ (กรณีดึงอีเมลไม่สำเร็จ)
+        function setEmailFieldEditable() {
+            const emailField = document.getElementById('email');
+            const emailStatus = document.getElementById('emailStatus');
+            
+            emailField.readOnly = false;
+            emailField.placeholder = "กรุณากรอกอีเมล";
+            emailField.classList.remove('email-locked');
+            emailStatus.innerHTML = '<i class="fas fa-info-circle"></i><span>กรุณากรอกอีเมลด้วยตนเอง</span>';
         }
         
         // กรอกข้อมูลผู้ใช้อัตโนมัติ
@@ -478,19 +589,6 @@
                 const nameField = document.getElementById('name');
                 if (nameField && !nameField.value) {
                     nameField.value = userProfile.displayName;
-                }
-                
-                // พยายามดึงอีเมลจาก LIFF context
-                try {
-                    const context = liff.getContext();
-                    if (context && context.utouId) {
-                        const emailField = document.getElementById('email');
-                        if (emailField && !emailField.value) {
-                            emailField.value = context.utouId + '@line.me';
-                        }
-                    }
-                } catch (e) {
-                    console.log("ไม่สามารถดึง context ได้:", e);
                 }
             }
         }
@@ -562,7 +660,7 @@
                 const formData = new FormData(this);
                 const requestData = {
                     name: formData.get('name'),
-                    email: formData.get('email'),
+                    email: userEmail || formData.get('email'), // ใช้ email จาก LINE เป็นหลัก
                     wish: formData.get('wish'),
                     line_user_id: userProfile ? userProfile.userId : 'N/A',
                     line_display_name: userProfile ? userProfile.displayName : 'N/A',
@@ -572,28 +670,41 @@
                 
                 console.log("ส่งข้อมูล:", requestData);
                 
-                // จำลองการส่งข้อมูล (ในระบบจริงจะส่งไปยัง Google Apps Script)
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // ส่งข้อมูลไปยัง Google Apps Script
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxInvr-oWndjCSZMn4kszcs4K_Vy54lnbWf17S9Lza-Lk4ykS4DXtybme72qXWrCg1biA/exec', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(requestData)
+                });
                 
-                // แสดงแอนิเมชัน
-                floatLotus(requestData.wish);
+                const data = await response.json();
                 
-                // แสดงข้อความสำเร็จ
-                successMessage.style.display = 'block';
-                
-                // รีเซ็ตฟอร์ม
-                this.reset();
-                
-                // ส่งข้อความขอบคุณถ้าเปิดใน LINE
-                if (liff.isInClient()) {
-                    try {
-                        await liff.sendMessages([{
-                            type: 'text',
-                            text: `ขอบคุณ ${requestData.name} ที่ร่วมลอยกระทงออนไลน์! 🎉\nคำอวยพร: ${requestData.wish}\nขอให้ความปรารถนาของคุณสมหวัง! 🌕`
-                        }]);
-                    } catch (sendError) {
-                        console.log("ไม่สามารถส่งข้อความได้:", sendError);
+                if (data.success) {
+                    // แสดงแอนิเมชัน
+                    floatLotus(requestData.wish);
+                    
+                    // แสดงข้อความสำเร็จ
+                    successMessage.style.display = 'block';
+                    
+                    // รีเซ็ตฟอร์ม (แต่รักษาข้อมูลอีเมล)
+                    document.getElementById('name').value = '';
+                    document.getElementById('wish').value = '';
+                    
+                    // ส่งข้อความขอบคุณถ้าเปิดใน LINE
+                    if (liff.isInClient()) {
+                        try {
+                            await liff.sendMessages([{
+                                type: 'text',
+                                text: `ขอบคุณ ${requestData.name} ที่ร่วมลอยกระทงออนไลน์! 🎉\nคำอวยพร: ${requestData.wish}\nขอให้ความปรารถนาของคุณสมหวัง! 🌕`
+                            }]);
+                        } catch (sendError) {
+                            console.log("ไม่สามารถส่งข้อความได้:", sendError);
+                        }
                     }
+                } else {
+                    showMessage(data.message, 'error');
                 }
                 
             } catch (error) {
@@ -604,39 +715,6 @@
                 submitBtn.style.display = 'flex';
                 loadingSpinner.classList.remove('show');
             }
-            
-            
-            // ในระบบจริง ให้ใช้โค้ดนี้แทน:
-            fetch('https://script.google.com/macros/s/AKfycbxInvr-oWndjCSZMn4kszcs4K_Vy54lnbWf17S9Lza-Lk4ykS4DXtybme72qXWrCg1biA/exec', {
-                method: "POST",
-                body: new URLSearchParams(requestData)
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    floatLotus(requestData.wish);
-                    successMessage.style.display = 'block';
-                    document.getElementById('wishForm').reset();
-                    
-                    if (liff.isInClient()) {
-                        liff.sendMessages([{
-                            type: 'text',
-                            text: `ขอบคุณ ${requestData.name} ที่ร่วมลอยกระทงออนไลน์! 🎉`
-                        }]);
-                    }
-                } else {
-                    showMessage(data.message, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessage('เกิดข้อผิดพลาดในการส่งข้อมูล', 'error');
-            })
-            .finally(() => {
-                submitBtn.style.display = 'flex';
-                loadingSpinner.classList.remove('show');
-            });
-            */
         });
         
         // เริ่มต้นแอปพลิเคชัน
