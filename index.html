@@ -403,6 +403,30 @@
             backdrop-filter: blur(10px);
         }
 
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .stats-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(2deg); }
@@ -491,11 +515,30 @@
         
         <h1 class="title text-4xl text-center mb-2 floating">ลอยกระทงออนไลน์</h1>
         <p class="text-center text-yellow-200 mb-8">ส่งความปรารถนาดีผ่านกระทงออนไลน์</p>
+
+        <!-- สถิติ -->
+        <div class="stats-container">
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div>
+                    <div class="text-2xl font-bold text-yellow-300" id="totalWishes">0</div>
+                    <div class="text-sm text-gray-300">คำอวยพรทั้งหมด</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-green-300" id="todayWishes">0</div>
+                    <div class="text-sm text-gray-300">คำอวยพรวันนี้</div>
+                </div>
+            </div>
+        </div>
         
         <!-- แสดงกระทงของคนอื่น -->
-        <div class="other-wishes-title">
-            <i class="fas fa-water mr-2"></i>
-            กระทงของผู้เข้าร่วมคนอื่นๆ
+        <div class="flex justify-between items-center mb-4">
+            <div class="other-wishes-title">
+                <i class="fas fa-water mr-2"></i>
+                กระทงของผู้เข้าร่วมคนอื่นๆ
+            </div>
+            <button class="refresh-btn" onclick="loadAllData()">
+                <i class="fas fa-sync-alt mr-2"></i>รีเฟรช
+            </button>
         </div>
         
         <div class="wish-counter">
@@ -629,57 +672,8 @@
         let selectedKrathongType = 1;
         let allWishes = [];
 
-        // ตัวอย่างคำอวยพรจากคนอื่น (ในระบบจริงจะดึงจาก Google Sheets)
-        const sampleWishes = [
-            { 
-                name: "น้องพลอย", 
-                wish: "ขอให้ครอบครัวมีความสุข", 
-                type: 1, 
-                picture: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" 
-            },
-            { 
-                name: "คุณป้า", 
-                wish: "สุขภาพแข็งแรง", 
-                type: 2, 
-                picture: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" 
-            },
-            { 
-                name: "น้องน้ำ", 
-                wish: "สอบติดมหาวิทยาลัย", 
-                type: 3, 
-                picture: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face" 
-            },
-            { 
-                name: "พี่เอก", 
-                wish: "ธุรกิจรุ่งเรือง", 
-                type: 4, 
-                picture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" 
-            },
-            { 
-                name: "คุณลุง", 
-                wish: "พบความสุขในชีวิต", 
-                type: 5, 
-                picture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" 
-            },
-            { 
-                name: "น้องมายด์", 
-                wish: "ได้เที่ยวรอบโลก", 
-                type: 6, 
-                picture: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" 
-            },
-            { 
-                name: "พี่โบ๊ท", 
-                wish: "งานใหม่ราบรื่น", 
-                type: 1, 
-                picture: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" 
-            },
-            { 
-                name: "น้องฟ้า", 
-                wish: "เจอเนื้อคู่เร็วๆ", 
-                type: 2, 
-                picture: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=100&h=100&fit=crop&crop=face" 
-            }
-        ];
+        // URL ของ Google Apps Script
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxInvr-oWndjCSZMn4kszcs4K_Vy54lnbWf17S9Lza-Lk4ykS4DXtybme72qXWrCg1biA/exec';
 
         // สร้างดาวบนท้องฟ้า
         function createStars() {
@@ -716,14 +710,18 @@
                 krathongItem.style.animationDelay = `${startDelay}s`;
                 krathongItem.style.top = `${startTop}px`;
                 
+                // ใช้รูปโปรไฟล์จากข้อมูลจริง หรือใช้รูป default
+                const profilePicture = wish.line_picture_url || 
+                                    `https://ui-avatars.com/api/?name=${encodeURIComponent(wish.name)}&background=ff6b6b&color=fff&size=100`;
+                
                 // สร้างองค์ประกอบกระทง
                 krathongItem.innerHTML = `
                     <div class="wish-bubble">
                         <strong>${wish.name}</strong>
                         <div class="text-xs mt-1">${wish.wish}</div>
                     </div>
-                    <img src="${wish.picture}" alt="${wish.name}" class="profile-krathong">
-                    <div class="krathong-base krathong-type-${wish.type}"></div>
+                    <img src="${profilePicture}" alt="${wish.name}" class="profile-krathong">
+                    <div class="krathong-base krathong-type-${wish.type || 1}"></div>
                 `;
                 
                 container.appendChild(krathongItem);
@@ -733,21 +731,66 @@
             document.getElementById('wishCount').textContent = allWishes.length;
         }
         
-        // โหลดคำอวยพรจากเซิร์ฟเวอร์
+        // โหลดคำอวยพรจาก Google Apps Script
         async function loadWishesFromServer() {
             try {
-                // ในระบบจริงจะดึงจาก Google Apps Script
-                // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL/getWishes');
-                // const wishes = await response.json();
+                const response = await fetch(`${GAS_URL}?action=getRecentWishes&count=20`);
+                const data = await response.json();
                 
-                // ใช้ตัวอย่างข้อมูลชั่วคราว
-                allWishes = [...sampleWishes];
-                createFloatingKrathongs();
+                if (data.success) {
+                    allWishes = data.data.wishes || [];
+                    createFloatingKrathongs();
+                    console.log('โหลดคำอวยพรสำเร็จ:', allWishes.length, 'รายการ');
+                } else {
+                    throw new Error(data.message);
+                }
             } catch (error) {
                 console.error('Error loading wishes:', error);
-                allWishes = [...sampleWishes];
+                showMessage('ไม่สามารถโหลดคำอวยพรได้', 'error');
+                allWishes = [];
                 createFloatingKrathongs();
             }
+        }
+
+        // โหลดสถิติ
+        async function loadStats() {
+            try {
+                const response = await fetch(`${GAS_URL}?action=getStats`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const stats = data.data;
+                    document.getElementById('totalWishes').textContent = stats.total || 0;
+                    document.getElementById('todayWishes').textContent = stats.today || 0;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // โหลดจำนวนคำอวยพร
+        async function loadWishesCount() {
+            try {
+                const response = await fetch(`${GAS_URL}?action=getWishesCount`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('wishCount').textContent = data.data.total || 0;
+                document.getElementById('totalWishes').textContent = data.data.total || 0;
+                    document.getElementById('todayWishes').textContent = data.data.today || 0;
+                }
+            } catch (error) {
+                console.error('Error loading wishes count:', error);
+            }
+        }
+
+        // โหลดข้อมูลทั้งหมด
+        async function loadAllData() {
+            await Promise.all([
+                loadWishesFromServer(),
+                loadStats(),
+                loadWishesCount()
+            ]);
         }
         
         // เริ่มต้น LIFF พร้อม scope email
@@ -949,11 +992,14 @@
             const newWish = {
                 name: name,
                 wish: wish,
-                picture: picture || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face',
+                line_picture_url: picture,
                 type: type
             };
             
-            allWishes.push(newWish);
+            allWishes.unshift(newWish); // เพิ่มด้านหน้าเพื่อแสดงล่าสุดก่อน
+            if (allWishes.length > 20) {
+                allWishes = allWishes.slice(0, 20); // จำกัดจำนวนที่แสดง
+            }
             createFloatingKrathongs();
         }
         
@@ -1076,7 +1122,12 @@
         
         // แสดงข้อความ
         function showMessage(message, type = 'info') {
+            // สามารถเพิ่มฟังก์ชันแสดงข้อความแจ้งเตือนได้ที่นี่
             console.log(`${type}: ${message}`);
+            
+            if (type === 'error') {
+                alert(message);
+            }
         }
         
         // จัดการการส่งฟอร์ม
@@ -1103,20 +1154,20 @@
                 const userPicture = userProfile ? userProfile.pictureUrl : '';
                 
                 const requestData = {
+                    action: 'addWish',
                     name: userName,
                     email: userEmail || formData.get('email'),
                     wish: userWish,
                     krathong_type: selectedKrathongType,
                     line_user_id: userProfile ? userProfile.userId : 'N/A',
                     line_display_name: userProfile ? userProfile.displayName : 'N/A',
-                    line_picture_url: userPicture,
-                    timestamp: new Date().toISOString()
+                    line_picture_url: userPicture
                 };
                 
                 console.log("ส่งข้อมูล:", requestData);
                 
                 // ส่งข้อมูลไปยัง Google Apps Script
-                const response = await fetch('https://script.google.com/macros/s/AKfycbxInvr-oWndjCSZMn4kszcs4K_Vy54lnbWf17S9Lza-Lk4ykS4DXtybme72qXWrCg1biA/exec', {
+                const response = await fetch(GAS_URL, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -1132,6 +1183,9 @@
                     
                     // เพิ่มกระทงใหม่ลงในแม่น้ำ
                     addNewKrathongToRiver(userName, userWish, userPicture, selectedKrathongType);
+                    
+                    // โหลดข้อมูลล่าสุดจากเซิร์ฟเวอร์
+                    await loadAllData();
                     
                     // แสดงข้อความสำเร็จ
                     successMessage.style.display = 'block';
@@ -1171,8 +1225,11 @@
         // เริ่มต้นแอปพลิเคชัน
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
-            loadWishesFromServer();
+            loadAllData();
             initializeLiff();
+
+            // รีเฟรชข้อมูลทุก 30 วินาที
+            setInterval(loadAllData, 30000);
         });
     </script>
 </body>
