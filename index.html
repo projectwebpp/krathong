@@ -822,7 +822,7 @@
                 
                 if (data.success) {
                     document.getElementById('wishCount').textContent = data.data.total || 0;
-                document.getElementById('totalWishes').textContent = data.data.total || 0;
+                    document.getElementById('totalWishes').textContent = data.data.total || 0;
                     document.getElementById('todayWishes').textContent = data.data.today || 0;
                 }
             } catch (error) {
@@ -1049,7 +1049,7 @@
             createFloatingKrathongs();
         }
         
-        // เอฟเฟกต์พุ่งกลางจอ
+        // เอฟเฟกต์พุ่งกลางจอ - แก้ไขให้ทำงานได้
         function createFireworkEffect() {
             const container = document.getElementById('fireworkContainer');
             container.style.display = 'block';
@@ -1307,8 +1307,10 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // แสดงเอฟเฟกต์พุ่งกลางจอ
-                    createFireworkEffect();
+                    // แสดงเอฟเฟกต์พุ่งกลางจอ (เพิ่ม delay เล็กน้อยเพื่อให้เห็นชัดเจน)
+                    setTimeout(() => {
+                        createFireworkEffect();
+                    }, 500);
                     
                     // แสดงแอนิเมชันลอยกระทง
                     floatLotus(userWish, userName, userPicture);
