@@ -652,6 +652,16 @@
             color: white;
             text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
+        
+        /* สไตล์สำหรับรูปโปรไฟล์ในคำอธิฐาน */
+        .wish-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fbbf24;
+            object-fit: cover;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
@@ -883,8 +893,11 @@
                 // สร้างองค์ประกอบกระทง
                 krathongItem.innerHTML = `
                     <div class="wish-bubble">
-                        <strong>${wish.name}</strong>
-                        <div class="text-xs mt-1">${wish.wish}</div>
+                        <div class="flex items-center justify-center mb-1">
+                            <img src="${profilePicture}" alt="${wish.name}" class="w-6 h-6 rounded-full border border-yellow-400">
+                            <strong class="ml-1">${wish.name}</strong>
+                        </div>
+                        <div class="text-xs">${wish.wish}</div>
                     </div>
                     <div class="krathong-avatar type-${wish.type || 1}">
                         <img src="${profilePicture}" alt="${wish.name}" class="profile-krathong" style="width: 100%; height: 100%; object-fit: cover;">
@@ -1116,13 +1129,19 @@
                 document.getElementById('currentUserProfile').src = userPicture;
             }
             
-            // แสดงคำอธิฐาน
+            // แสดงคำอธิฐานพร้อมรูปโปรไฟล์
             wishMessage.innerHTML = `
-                <div class="flex items-center mb-2">
-                    <img src="${userPicture}" alt="${userName}" class="w-8 h-8 rounded-full mr-2 border-2 border-yellow-400">
-                    <strong>${userName}</strong>
+                <div class="flex items-center justify-center mb-3">
+                    <img src="${userPicture}" alt="${userName}" class="w-10 h-10 rounded-full border-2 border-yellow-400 mr-2">
+                    <div>
+                        <div class="font-bold text-lg">${userName}</div>
+                        <div class="text-xs text-gray-600">กระทง${selectedKrathongName}</div>
+                    </div>
                 </div>
-                <div class="text-sm">${wishText}</div>
+                <div class="text-center">
+                    <div class="text-sm mb-2">"${wishText}"</div>
+                    <div class="text-xs text-gray-500">ขอให้ความปรารถนาสมหวัง</div>
+                </div>
             `;
             wishMessage.classList.add('show');
             
