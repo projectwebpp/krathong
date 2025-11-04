@@ -1118,8 +1118,11 @@
             
             // แสดงคำอธิฐาน
             wishMessage.innerHTML = `
-                <strong>${userName}</strong><br>
-                ${wishText}
+                <div class="flex items-center mb-2">
+                    <img src="${userPicture}" alt="${userName}" class="w-8 h-8 rounded-full mr-2 border-2 border-yellow-400">
+                    <strong>${userName}</strong>
+                </div>
+                <div class="text-sm">${wishText}</div>
             `;
             wishMessage.classList.add('show');
             
@@ -1307,15 +1310,24 @@
                             contents: [
                                 {
                                     type: "text",
-                                    text: "🎑 ลอยกระทงสำเร็จ!",
+                                    text: "🎑 ลอยกระทงออนไลน์สำเร็จ!",
                                     weight: "bold",
                                     size: "xl",
                                     color: "#FFFFFF",
                                     align: "center"
+                                },
+                                {
+                                    type: "text",
+                                    text: "ขอให้ความปรารถนาของคุณสมหวัง",
+                                    size: "sm",
+                                    color: "#FFFFFF",
+                                    align: "center",
+                                    margin: "sm"
                                 }
                             ],
                             backgroundColor: color.primary,
-                            paddingAll: "20px"
+                            paddingAll: "20px",
+                            paddingBottom: "15px"
                         },
                         hero: {
                             type: "box",
@@ -1335,21 +1347,28 @@
                                     contents: [
                                         {
                                             type: "text",
+                                            text: `${userName}`,
+                                            color: "#FFFFFF",
+                                            align: "center",
+                                            size: "lg",
+                                            weight: "bold"
+                                        },
+                                        {
+                                            type: "text",
                                             text: `กระทง${color.name}`,
                                             color: "#FFFFFF",
                                             align: "center",
-                                            size: "md",
-                                            weight: "bold",
-                                            offsetTop: "10px"
+                                            size: "sm",
+                                            margin: "xs"
                                         }
                                     ],
-                                    backgroundColor: "#00000066",
+                                    backgroundColor: "#00000099",
                                     paddingAll: "10px",
                                     position: "absolute",
                                     offsetBottom: "0px",
                                     offsetStart: "0px",
                                     offsetEnd: "0px",
-                                    paddingAll: "20px"
+                                    paddingAll: "15px"
                                 }
                             ],
                             paddingAll: "0px"
@@ -1364,50 +1383,57 @@
                                     contents: [
                                         {
                                             type: "text",
-                                            text: "จาก:",
-                                            size: "md",
-                                            color: "#AAAAAA",
-                                            flex: 1
-                                        },
-                                        {
-                                            type: "text",
-                                            text: userName,
+                                            text: "🌙 คำอธิฐาน:",
                                             size: "md",
                                             color: "#666666",
                                             weight: "bold",
-                                            flex: 2,
-                                            align: "end"
+                                            flex: 2
                                         }
-                                    ]
+                                    ],
+                                    margin: "md"
                                 },
                                 {
                                     type: "separator",
-                                    margin: "lg"
-                                },
-                                {
-                                    type: "text",
-                                    text: "คำอธิฐาน:",
-                                    weight: "bold",
-                                    size: "md",
-                                    margin: "lg"
+                                    margin: "md"
                                 },
                                 {
                                     type: "text",
                                     text: wish,
                                     wrap: true,
-                                    margin: "sm",
-                                    color: "#666666"
+                                    margin: "lg",
+                                    color: "#444444"
                                 },
                                 {
                                     type: "separator",
                                     margin: "lg"
                                 },
                                 {
-                                    type: "text",
-                                    text: "ขอให้ความปรารถนาของคุณสมหวัง! 🌕",
-                                    size: "sm",
-                                    color: "#888888",
-                                    align: "center",
+                                    type: "box",
+                                    layout: "horizontal",
+                                    contents: [
+                                        {
+                                            type: "text",
+                                            text: "🌕",
+                                            size: "sm",
+                                            flex: 1,
+                                            align: "center"
+                                        },
+                                        {
+                                            type: "text",
+                                            text: "ขอให้สมหวังดั่งใจปรารถนา",
+                                            size: "sm",
+                                            color: "#888888",
+                                            flex: 4,
+                                            align: "center"
+                                        },
+                                        {
+                                            type: "text",
+                                            text: "🌕",
+                                            size: "sm",
+                                            flex: 1,
+                                            align: "center"
+                                        }
+                                    ],
                                     margin: "lg"
                                 }
                             ]
@@ -1420,17 +1446,21 @@
                                     type: "button",
                                     action: {
                                         type: "uri",
-                                        label: "ลอยกระทงด้วย",
+                                        label: "🎑 ลอยกระทงด้วย",
                                         uri: `https://liff.line.me/1661009147-gKYqxqQ3`
                                     },
                                     style: "primary",
-                                    color: color.primary
+                                    color: color.secondary,
+                                    height: "md"
                                 }
                             ]
                         },
                         styles: {
                             header: {
                                 backgroundColor: color.primary
+                            },
+                            hero: {
+                                backgroundColor: color.secondary
                             },
                             footer: {
                                 separator: true
