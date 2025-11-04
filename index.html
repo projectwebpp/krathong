@@ -427,6 +427,38 @@
             backdrop-filter: blur(10px);
         }
 
+        /* เอฟเฟกต์พุ่งกลางจอ */
+        .firework-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+        
+        .firework {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: fireworkExplode 1s ease-out forwards;
+        }
+        
+        .firework-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: fireworkParticle 1s ease-out forwards;
+        }
+
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(2deg); }
@@ -471,6 +503,17 @@
             100% { transform: translateX(100vw) translateY(0px) rotate(0deg); }
         }
         
+        @keyframes fireworkExplode {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+        
+        @keyframes fireworkParticle {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+        
         .input-field {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -501,6 +544,9 @@
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <!-- เอฟเฟกต์พุ่งกลางจอ -->
+    <div class="firework-container" id="fireworkContainer"></div>
+    
     <div class="max-w-md w-full">
         <!-- User Info from LINE -->
         <div class="user-info" id="userInfo">
@@ -1003,11 +1049,55 @@
             createFloatingKrathongs();
         }
         
+        // เอฟเฟกต์พุ่งกลางจอ
+        function createFireworkEffect() {
+            const container = document.getElementById('fireworkContainer');
+            container.style.display = 'block';
+            container.innerHTML = '';
+            
+            // สร้างดอกไม้ไฟหลัก
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.background = 'radial-gradient(circle, #fbbf24, #dc2626)';
+            container.appendChild(firework);
+            
+            // สร้างอนุภาคดอกไม้ไฟ
+            const particleCount = 24;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                
+                // สุ่มสีอนุภาค
+                const colors = ['#fbbf24', '#dc2626', '#16a34a', '#3b82f6', '#f59e0b'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = color;
+                
+                // สุ่มทิศทางและระยะทาง
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = 100 + Math.random() * 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                container.appendChild(particle);
+            }
+            
+            // ซ่อนเอฟเฟกต์หลังจากจบแอนิเมชัน
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 1000);
+        }
+        
         // ส่ง Flex Message ไปยัง LINE
-        async function sendFlexMessage(userName, wish, krathongType) {
+        async function sendFlexMessage(userName, wish, krathongType, userPicture) {
             if (!liff.isInClient()) return;
             
             try {
+                // ใช้รูปโปรไฟล์จริงหรือรูป default
+                const profilePicture = userPicture || 'https://i.imgur.com/8SfQ1tq.png';
+                
                 const flexMessage = {
                     type: 'flex',
                     altText: `${userName} ได้ลอยกระทงออนไลน์!`,
@@ -1020,7 +1110,7 @@
                             contents: [
                                 {
                                     type: "text",
-                                    text: "🎉 ลอยกระทงสำเร็จ!",
+                                    text: "🎑 ลอยกระทงสำเร็จ!",
                                     weight: "bold",
                                     size: "xl",
                                     color: "#FFFFFF",
@@ -1036,23 +1126,62 @@
                             contents: [
                                 {
                                     type: "image",
-                                    url: "https://i.imgur.com/8SfQ1tq.png",
+                                    url: profilePicture,
                                     size: "full",
                                     aspectMode: "cover",
-                                    aspectRatio: "1:1"
+                                    aspectRatio: "1:1",
+                                    gravity: "center"
+                                },
+                                {
+                                    type: "box",
+                                    layout: "vertical",
+                                    contents: [
+                                        {
+                                            type: "text",
+                                            text: "กระทงของคุณลอยไปแล้ว",
+                                            color: "#FFFFFF",
+                                            align: "center",
+                                            size: "lg",
+                                            weight: "bold",
+                                            offsetTop: "10px"
+                                        }
+                                    ],
+                                    backgroundColor: "#00000066",
+                                    paddingAll: "10px",
+                                    position: "absolute",
+                                    offsetBottom: "0px",
+                                    offsetStart: "0px",
+                                    offsetEnd: "0px",
+                                    paddingAll: "20px"
                                 }
-                            ]
+                            ],
+                            paddingAll: "0px"
                         },
                         body: {
                             type: "box",
                             layout: "vertical",
                             contents: [
                                 {
-                                    type: "text",
-                                    text: `จาก: ${userName}`,
-                                    weight: "bold",
-                                    size: "lg",
-                                    margin: "md"
+                                    type: "box",
+                                    layout: "horizontal",
+                                    contents: [
+                                        {
+                                            type: "text",
+                                            text: "จาก:",
+                                            size: "md",
+                                            color: "#AAAAAA",
+                                            flex: 1
+                                        },
+                                        {
+                                            type: "text",
+                                            text: userName,
+                                            size: "md",
+                                            color: "#666666",
+                                            weight: "bold",
+                                            flex: 2,
+                                            align: "end"
+                                        }
+                                    ]
                                 },
                                 {
                                     type: "separator",
@@ -1178,6 +1307,9 @@
                 const data = await response.json();
                 
                 if (data.success) {
+                    // แสดงเอฟเฟกต์พุ่งกลางจอ
+                    createFireworkEffect();
+                    
                     // แสดงแอนิเมชันลอยกระทง
                     floatLotus(userWish, userName, userPicture);
                     
@@ -1195,7 +1327,7 @@
                     document.getElementById('wish').value = '';
                     
                     // ส่ง Flex Message
-                    await sendFlexMessage(userName, userWish, selectedKrathongType);
+                    await sendFlexMessage(userName, userWish, selectedKrathongType, userPicture);
                     
                 } else {
                     showMessage(data.message, 'error');
