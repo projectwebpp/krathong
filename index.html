@@ -662,6 +662,17 @@
             object-fit: cover;
             margin-right: 10px;
         }
+
+        /* สไตล์สำหรับไอคอนกระทงในคำอธิฐาน */
+        .krathong-icon-in-wish {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin: 0 5px;
+            vertical-align: middle;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
@@ -1129,13 +1140,28 @@
                 document.getElementById('currentUserProfile').src = userPicture;
             }
             
-            // แสดงคำอธิฐานพร้อมรูปโปรไฟล์
+            // ไอคอนกระทงตามประเภทที่เลือก
+            const krathongIcons = {
+                1: "★",
+                2: "❤",
+                3: "☾",
+                4: "☀",
+                5: "💎",
+                6: "🍃"
+            };
+            
+            const krathongIcon = krathongIcons[selectedKrathongType] || "★";
+            
+            // แสดงคำอธิฐานพร้อมรูปโปรไฟล์และไอคอนกระทง
             wishMessage.innerHTML = `
                 <div class="flex items-center justify-center mb-3">
                     <img src="${userPicture}" alt="${userName}" class="w-10 h-10 rounded-full border-2 border-yellow-400 mr-2">
                     <div>
                         <div class="font-bold text-lg">${userName}</div>
-                        <div class="text-xs text-gray-600">กระทง${selectedKrathongName}</div>
+                        <div class="text-xs text-gray-600 flex items-center">
+                            <span class="krathong-icon-in-wish krathong-type-${selectedKrathongType}" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; margin-right: 5px; font-size: 10px;">${krathongIcon}</span>
+                            กระทง${selectedKrathongName}
+                        </div>
                     </div>
                 </div>
                 <div class="text-center">
