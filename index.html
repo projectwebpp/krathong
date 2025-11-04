@@ -567,11 +567,11 @@
             <div class="grid grid-cols-2 gap-4 text-center">
                 <div>
                     <div class="text-2xl font-bold text-yellow-300" id="totalWishes">0</div>
-                    <div class="text-sm text-gray-300">คำอวยพรทั้งหมด</div>
+                    <div class="text-sm text-gray-300">คำอธิฐานทั้งหมด</div>
                 </div>
                 <div>
                     <div class="text-2xl font-bold text-green-300" id="todayWishes">0</div>
-                    <div class="text-sm text-gray-300">คำอวยพรวันนี้</div>
+                    <div class="text-sm text-gray-300">คำอธิฐานวันนี้</div>
                 </div>
             </div>
         </div>
@@ -589,7 +589,7 @@
         
         <div class="wish-counter">
             <i class="fas fa-heart text-red-400 mr-2"></i>
-            <span id="wishCount">0</span> คำอวยพรในแม่น้ำ
+            <span id="wishCount">0</span> คำอธิฐานในแม่น้ำ
         </div>
         
         <div class="river-container">
@@ -674,17 +674,17 @@
                 
                 <div class="mb-6">
                     <label class="block text-white mb-2 font-semibold" for="wish">
-                        <i class="fas fa-pencil-alt mr-2"></i>คำอวยพร
+                        <i class="fas fa-pencil-alt mr-2"></i>คำอธิฐาน
                     </label>
                     <textarea id="wish" name="wish" rows="4" 
                               class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-300 focus:outline-none resize-none" 
-                              placeholder="เขียนคำอวยพรของคุณที่นี่..." required></textarea>
+                              placeholder="เขียนคำอธิฐานของคุณที่นี่..." required></textarea>
                 </div>
                 
                 <button type="submit" id="submitBtn" 
                         class="w-full btn-submit text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center text-lg">
                     <i class="fas fa-paper-plane mr-3"></i>
-                    ลอยกระทงส่งคำอวยพร
+                    ลอยกระทงส่งคำอธิฐาน
                 </button>
             </form>
             
@@ -692,13 +692,13 @@
             <div class="loading-spinner text-center py-4" id="loadingSpinner">
                 <div class="inline-flex items-center space-x-2 text-yellow-300">
                     <i class="fas fa-spinner fa-spin text-2xl"></i>
-                    <span class="font-semibold">กำลังส่งคำอวยพร...</span>
+                    <span class="font-semibold">กำลังส่งคำอธิฐาน...</span>
                 </div>
             </div>
             
             <div class="success-message" id="successMessage">
                 <i class="fas fa-check-circle text-3xl mb-3"></i>
-                <p class="text-lg font-semibold">ส่งคำอวยพรสำเร็จแล้ว!</p>
+                <p class="text-lg font-semibold">ส่งคำอธิฐานสำเร็จแล้ว!</p>
                 <p class="opacity-90 mt-1">ขอให้ความปรารถนาของคุณสมหวัง</p>
             </div>
         </div>
@@ -773,11 +773,11 @@
                 container.appendChild(krathongItem);
             });
             
-            // อัปเดตจำนวนคำอวยพร
+            // อัปเดตจำนวนคำอธิฐาน
             document.getElementById('wishCount').textContent = allWishes.length;
         }
         
-        // โหลดคำอวยพรจาก Google Apps Script
+        // โหลดคำอธิฐานจาก Google Apps Script
         async function loadWishesFromServer() {
             try {
                 const response = await fetch(`${GAS_URL}?action=getRecentWishes&count=20`);
@@ -786,13 +786,13 @@
                 if (data.success) {
                     allWishes = data.data.wishes || [];
                     createFloatingKrathongs();
-                    console.log('โหลดคำอวยพรสำเร็จ:', allWishes.length, 'รายการ');
+                    console.log('โหลดคำอธิฐานสำเร็จ:', allWishes.length, 'รายการ');
                 } else {
                     throw new Error(data.message);
                 }
             } catch (error) {
                 console.error('Error loading wishes:', error);
-                showMessage('ไม่สามารถโหลดคำอวยพรได้', 'error');
+                showMessage('ไม่สามารถโหลดคำอธิฐานได้', 'error');
                 allWishes = [];
                 createFloatingKrathongs();
             }
@@ -814,7 +814,7 @@
             }
         }
 
-        // โหลดจำนวนคำอวยพร
+        // โหลดจำนวนคำอธิฐาน
         async function loadWishesCount() {
             try {
                 const response = await fetch(`${GAS_URL}?action=getWishesCount`);
@@ -974,7 +974,7 @@
                 document.getElementById('currentUserProfile').src = userPicture;
             }
             
-            // แสดงคำอวยพร
+            // แสดงคำอธิฐาน
             wishMessage.innerHTML = `
                 <strong>${userName}</strong><br>
                 ${wishText}
@@ -1189,7 +1189,7 @@
                                 },
                                 {
                                     type: "text",
-                                    text: "คำอวยพร:",
+                                    text: "คำอธิฐาน:",
                                     weight: "bold",
                                     size: "md",
                                     margin: "lg"
