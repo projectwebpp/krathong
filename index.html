@@ -574,7 +574,7 @@
         .krathong-type-5 { background: radial-gradient(circle, #feca57, #ff9ff3); }
         .krathong-type-6 { background: radial-gradient(circle, #a3cb38, #badc58); }
 
-        /* สไตล์สำหรับรูปโปรไฟล์ที่มีรูปกระทง */
+        /* สไตล์สำหรับรูปโปรไฟล์ที่มีกรอบกระทง */
         .profile-with-krathong {
             position: relative;
             display: inline-block;
@@ -583,75 +583,21 @@
         .profile-with-krathong::after {
             content: '';
             position: absolute;
-            bottom: -8px;
-            right: -8px;
-            width: 30px;
-            height: 30px;
+            bottom: -5px;
+            right: -5px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             border: 2px solid white;
             box-shadow: 0 0 10px currentColor;
-            background-size: cover;
-            background-position: center;
         }
 
-        .profile-with-krathong.type-1::after { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23ff9ff3"/><circle cx="50" cy="50" r="35" fill="%23f368e0"/><text x="50" y="55" font-size="20" text-anchor="middle" fill="white">★</text></svg>');
-        }
-        .profile-with-krathong.type-2::after { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23ff9f43"/><circle cx="50" cy="50" r="35" fill="%23ff6b6b"/><text x="50" y="55" font-size="20" text-anchor="middle" fill="white">❤</text></svg>');
-        }
-        .profile-with-krathong.type-3::after { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%2354a0ff"/><circle cx="50" cy="50" r="35" fill="%235f27cd"/><text x="50" y="55" font-size="20" text-anchor="middle" fill="white">☾</text></svg>');
-        }
-        .profile-with-krathong.type-4::after { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%2300d2d3"/><circle cx="50" cy="50" r="35" fill="%2354a0ff"/><text x="50" y="55" font-size="20" text-anchor="middle" fill="white">☀</text></svg>');
-        }
-        .profile-with-krathong.type-5::after { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23feca57"/><circle cx="50" cy="50" r="35" fill="%23ff9ff3"/><text x="50" y="55" font-size="20" text-anchor="middle" fill="white">💎</text></svg>');
-        }
-        .profile-with-krathong.type-6::after { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23a3cb38"/><circle cx="50" cy="50" r="35" fill="%23badc58"/><text x="50" y="55" font-size="20" text-anchor="middle" fill="white">🍃</text></svg>');
-        }
-
-        /* สไตล์สำหรับกระทงในแม่น้ำ */
-        .krathong-avatar {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            margin-bottom: 5px;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .krathong-avatar.type-1 { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad1" cx="30%" cy="30%"><stop offset="0%" stop-color="%23ff9ff3"/><stop offset="100%" stop-color="%23f368e0"/></radialGradient></defs><circle cx="50" cy="50" r="45" fill="url(%23grad1)"/><text x="50" y="58" font-size="24" text-anchor="middle" fill="white">★</text></svg>');
-        }
-        .krathong-avatar.type-2 { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad2" cx="30%" cy="30%"><stop offset="0%" stop-color="%23ff9f43"/><stop offset="100%" stop-color="%23ff6b6b"/></radialGradient></defs><circle cx="50" cy="50" r="45" fill="url(%23grad2)"/><text x="50" y="58" font-size="24" text-anchor="middle" fill="white">❤</text></svg>');
-        }
-        .krathong-avatar.type-3 { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad3" cx="30%" cy="30%"><stop offset="0%" stop-color="%2354a0ff"/><stop offset="100%" stop-color="%235f27cd"/></radialGradient></defs><circle cx="50" cy="50" r="45" fill="url(%23grad3)"/><text x="50" y="58" font-size="24" text-anchor="middle" fill="white">☾</text></svg>');
-        }
-        .krathong-avatar.type-4 { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad4" cx="30%" cy="30%"><stop offset="0%" stop-color="%2300d2d3"/><stop offset="100%" stop-color="%2354a0ff"/></radialGradient></defs><circle cx="50" cy="50" r="45" fill="url(%23grad4)"/><text x="50" y="58" font-size="24" text-anchor="middle" fill="white">☀</text></svg>');
-        }
-        .krathong-avatar.type-5 { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad5" cx="30%" cy="30%"><stop offset="0%" stop-color="%23feca57"/><stop offset="100%" stop-color="%23ff9ff3"/></radialGradient></defs><circle cx="50" cy="50" r="45" fill="url(%23grad5)"/><text x="50" y="58" font-size="24" text-anchor="middle" fill="white">💎</text></svg>');
-        }
-        .krathong-avatar.type-6 { 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad6" cx="30%" cy="30%"><stop offset="0%" stop-color="%23a3cb38"/><stop offset="100%" stop-color="%23badc58"/></radialGradient></defs><circle cx="50" cy="50" r="45" fill="url(%23grad6)"/><text x="50" y="58" font-size="24" text-anchor="middle" fill="white">🍃</text></svg>');
-        }
-
-        /* สไตล์สำหรับไอคอนกระทงในตัวเลือก */
-        .krathong-icon {
-            font-size: 24px;
-            color: white;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-        }
+        .profile-with-krathong.type-1::after { background: radial-gradient(circle, #ff9ff3, #f368e0); }
+        .profile-with-krathong.type-2::after { background: radial-gradient(circle, #ff9f43, #ff6b6b); }
+        .profile-with-krathong.type-3::after { background: radial-gradient(circle, #54a0ff, #5f27cd); }
+        .profile-with-krathong.type-4::after { background: radial-gradient(circle, #00d2d3, #54a0ff); }
+        .profile-with-krathong.type-5::after { background: radial-gradient(circle, #feca57, #ff9ff3); }
+        .profile-with-krathong.type-6::after { background: radial-gradient(circle, #a3cb38, #badc58); }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
@@ -667,7 +613,7 @@
                 </div>
                 <div>
                     <div class="font-semibold" id="userName">กำลังโหลด...</div>
-                    <div class="text-sm opacity-80" id="userStatus">กระทง: <span id="currentKrathongName">ดาวสีชมพู</span></div>
+                    <div class="text-sm opacity-80" id="userStatus">LINE User</div>
                 </div>
             </div>
         </div>
@@ -766,28 +712,24 @@
                         <i class="fas fa-palette mr-2"></i>เลือกรูปแบบกระทง
                     </label>
                     <div class="krathong-selection">
-                        <div class="krathong-option krathong-type-1 selected" data-type="1" data-name="ดาวสีชมพู">
-                            <div class="krathong-icon">★</div>
+                        <div class="krathong-option krathong-type-1 selected" data-type="1">
+                            <i class="fas fa-star"></i>
                         </div>
-                        <div class="krathong-option krathong-type-2" data-type="2" data-name="หัวใจสีส้ม">
-                            <div class="krathong-icon">❤</div>
+                        <div class="krathong-option krathong-type-2" data-type="2">
+                            <i class="fas fa-heart"></i>
                         </div>
-                        <div class="krathong-option krathong-type-3" data-type="3" data-name="ดวงจันทร์สีฟ้า">
-                            <div class="krathong-icon">☾</div>
+                        <div class="krathong-option krathong-type-3" data-type="3">
+                            <i class="fas fa-moon"></i>
                         </div>
-                        <div class="krathong-option krathong-type-4" data-type="4" data-name="ดวงอาทิตย์สีฟ้าอมเขียว">
-                            <div class="krathong-icon">☀</div>
+                        <div class="krathong-option krathong-type-4" data-type="4">
+                            <i class="fas fa-sun"></i>
                         </div>
-                        <div class="krathong-option krathong-type-5" data-type="5" data-name="อัญมณีสีทอง">
-                            <div class="krathong-icon">💎</div>
+                        <div class="krathong-option krathong-type-5" data-type="5">
+                            <i class="fas fa-gem"></i>
                         </div>
-                        <div class="krathong-option krathong-type-6" data-type="6" data-name="ใบไม้สีเขียว">
-                            <div class="krathong-icon">🍃</div>
+                        <div class="krathong-option krathong-type-6" data-type="6">
+                            <i class="fas fa-leaf"></i>
                         </div>
-                    </div>
-                    <div class="text-center mt-2 text-yellow-200 text-sm">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        <span id="selectedKrathongName">ดาวสีชมพู</span>
                     </div>
                 </div>
                 
@@ -835,7 +777,6 @@
         let liffInitialized = false;
         let userEmail = '';
         let selectedKrathongType = 1;
-        let selectedKrathongName = "ดาวสีชมพู";
         let allWishes = [];
 
         // URL ของ Google Apps Script
@@ -886,8 +827,8 @@
                         <strong>${wish.name}</strong>
                         <div class="text-xs mt-1">${wish.wish}</div>
                     </div>
-                    <div class="krathong-avatar type-${wish.type || 1}">
-                        <img src="${profilePicture}" alt="${wish.name}" class="profile-krathong" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="profile-with-krathong type-${wish.type || 1}">
+                        <img src="${profilePicture}" alt="${wish.name}" class="profile-krathong">
                     </div>
                     <div class="krathong-base krathong-type-${wish.type || 1}"></div>
                 `;
@@ -1098,9 +1039,6 @@
             // เพิ่มคลาสใหม่ตามประเภทกระทง
             profileWithKrathong.classList.add(`type-${type}`);
             currentProfileWithKrathong.classList.add(`type-${type}`);
-            
-            // อัปเดตชื่อกระทง
-            document.getElementById('currentKrathongName').textContent = selectedKrathongName;
         }
         
         // ฟังก์ชันลอยกระทง
@@ -1535,11 +1473,6 @@
                 });
                 this.classList.add('selected');
                 selectedKrathongType = parseInt(this.dataset.type);
-                selectedKrathongName = this.dataset.name;
-                
-                // อัปเดตชื่อกระทงที่เลือก
-                document.getElementById('selectedKrathongName').textContent = selectedKrathongName;
-                
                 updateLotusColor(selectedKrathongType);
                 updateProfileKrathongFrame(selectedKrathongType);
             });
