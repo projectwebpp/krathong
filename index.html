@@ -427,7 +427,7 @@
             backdrop-filter: blur(10px);
         }
 
-        /* เอฟเฟกต์พุ่งกลางจอ */
+        /* เอฟเฟกต์พุ่งกลางจอแบบเต็มหน้าจอ */
         .firework-container {
             position: fixed;
             top: 0;
@@ -448,7 +448,7 @@
             height: 10px;
             border-radius: 50%;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-            animation: fireworkExplode 1s ease-out forwards;
+            animation: fireworkExplode 1.5s ease-out forwards;
         }
         
         .firework-particle {
@@ -456,7 +456,28 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            animation: fireworkParticle 1s ease-out forwards;
+            animation: fireworkParticle 1.5s ease-out forwards;
+        }
+
+        /* เอฟเฟกต์ดอกไม้ไฟเพิ่มเติม */
+        .firework-large {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
+            animation: fireworkLargeExplode 2s ease-out forwards;
+        }
+
+        .firework-sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: fireworkSparkle 2s ease-out forwards;
         }
 
         @keyframes floating {
@@ -506,10 +527,21 @@
         @keyframes fireworkExplode {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
             50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
         }
         
         @keyframes fireworkParticle {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        @keyframes fireworkLargeExplode {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+        }
+
+        @keyframes fireworkSparkle {
             0% { transform: translate(0, 0) scale(1); opacity: 1; }
             100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
@@ -541,6 +573,31 @@
         .krathong-type-4 { background: radial-gradient(circle, #00d2d3, #54a0ff); }
         .krathong-type-5 { background: radial-gradient(circle, #feca57, #ff9ff3); }
         .krathong-type-6 { background: radial-gradient(circle, #a3cb38, #badc58); }
+
+        /* สไตล์สำหรับรูปโปรไฟล์ที่มีกรอบกระทง */
+        .profile-with-krathong {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-with-krathong::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .profile-with-krathong.type-1::after { background: radial-gradient(circle, #ff9ff3, #f368e0); }
+        .profile-with-krathong.type-2::after { background: radial-gradient(circle, #ff9f43, #ff6b6b); }
+        .profile-with-krathong.type-3::after { background: radial-gradient(circle, #54a0ff, #5f27cd); }
+        .profile-with-krathong.type-4::after { background: radial-gradient(circle, #00d2d3, #54a0ff); }
+        .profile-with-krathong.type-5::after { background: radial-gradient(circle, #feca57, #ff9ff3); }
+        .profile-with-krathong.type-6::after { background: radial-gradient(circle, #a3cb38, #badc58); }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
@@ -551,7 +608,9 @@
         <!-- User Info from LINE -->
         <div class="user-info" id="userInfo">
             <div class="flex items-center space-x-3">
-                <img id="userPicture" class="w-12 h-12 rounded-full border-2 border-white" src="" alt="Profile">
+                <div class="profile-with-krathong" id="profileWithKrathong">
+                    <img id="userPicture" class="w-12 h-12 rounded-full border-2 border-white" src="" alt="Profile">
+                </div>
                 <div>
                     <div class="font-semibold" id="userName">กำลังโหลด...</div>
                     <div class="text-sm opacity-80" id="userStatus">LINE User</div>
@@ -602,7 +661,9 @@
             <div class="stars" id="stars"></div>
             <div class="moon"></div>
             <div class="lotus" id="lotus">
-                <img id="currentUserProfile" class="user-profile-img" src="" alt="Profile">
+                <div class="profile-with-krathong" id="currentProfileWithKrathong">
+                    <img id="currentUserProfile" class="user-profile-img" src="" alt="Profile">
+                </div>
                 <div class="lotus-petals">
                     <div class="petal"></div>
                     <div class="petal"></div>
@@ -766,7 +827,9 @@
                         <strong>${wish.name}</strong>
                         <div class="text-xs mt-1">${wish.wish}</div>
                     </div>
-                    <img src="${profilePicture}" alt="${wish.name}" class="profile-krathong">
+                    <div class="profile-with-krathong type-${wish.type || 1}">
+                        <img src="${profilePicture}" alt="${wish.name}" class="profile-krathong">
+                    </div>
                     <div class="krathong-base krathong-type-${wish.type || 1}"></div>
                 `;
                 
@@ -877,6 +940,9 @@
                     document.getElementById('currentUserProfile').src = userProfile.pictureUrl;
                 }
                 
+                // อัปเดตกรอบกระทงในโปรไฟล์
+                updateProfileKrathongFrame(selectedKrathongType);
+                
                 // ดึงอีเมลจาก LINE
                 await getUserEmail();
                 
@@ -959,6 +1025,20 @@
                     nameField.value = userProfile.displayName;
                 }
             }
+        }
+        
+        // อัปเดตกรอบกระทงในโปรไฟล์
+        function updateProfileKrathongFrame(type) {
+            const profileWithKrathong = document.getElementById('profileWithKrathong');
+            const currentProfileWithKrathong = document.getElementById('currentProfileWithKrathong');
+            
+            // ลบคลาสเก่าทั้งหมด
+            profileWithKrathong.className = 'profile-with-krathong';
+            currentProfileWithKrathong.className = 'profile-with-krathong';
+            
+            // เพิ่มคลาสใหม่ตามประเภทกระทง
+            profileWithKrathong.classList.add(`type-${type}`);
+            currentProfileWithKrathong.classList.add(`type-${type}`);
         }
         
         // ฟังก์ชันลอยกระทง
@@ -1049,45 +1129,88 @@
             createFloatingKrathongs();
         }
         
-        // เอฟเฟกต์พุ่งกลางจอ - แก้ไขให้ทำงานได้
+        // เอฟเฟกต์พุ่งกลางจอแบบเต็มหน้าจอ
         function createFireworkEffect() {
             const container = document.getElementById('fireworkContainer');
             container.style.display = 'block';
             container.innerHTML = '';
             
-            // สร้างดอกไม้ไฟหลัก
-            const firework = document.createElement('div');
-            firework.className = 'firework';
-            firework.style.background = 'radial-gradient(circle, #fbbf24, #dc2626)';
-            container.appendChild(firework);
-            
-            // สร้างอนุภาคดอกไม้ไฟ
-            const particleCount = 24;
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'firework-particle';
+            // สร้างดอกไม้ไฟหลักหลายจุด
+            const fireworkCount = 5;
+            for (let f = 0; f < fireworkCount; f++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
                 
-                // สุ่มสีอนุภาค
-                const colors = ['#fbbf24', '#dc2626', '#16a34a', '#3b82f6', '#f59e0b'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.background = color;
+                // สุ่มตำแหน่ง
+                const left = 20 + Math.random() * 60;
+                const top = 20 + Math.random() * 60;
                 
-                // สุ่มทิศทางและระยะทาง
-                const angle = (i / particleCount) * Math.PI * 2;
-                const distance = 100 + Math.random() * 50;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
+                firework.style.left = `${left}%`;
+                firework.style.top = `${top}%`;
+                firework.style.background = 'radial-gradient(circle, #fbbf24, #dc2626)';
+                container.appendChild(firework);
                 
-                particle.style.setProperty('--tx', `${tx}px`);
-                particle.style.setProperty('--ty', `${ty}px`);
-                
-                container.appendChild(particle);
+                // สร้างอนุภาคดอกไม้ไฟ
+                const particleCount = 24;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'firework-particle';
+                    
+                    // สุ่มสีอนุภาค
+                    const colors = ['#fbbf24', '#dc2626', '#16a34a', '#3b82f6', '#f59e0b', '#ffffff'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.background = color;
+                    
+                    // สุ่มทิศทางและระยะทาง
+                    const angle = (i / particleCount) * Math.PI * 2;
+                    const distance = 150 + Math.random() * 100;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    
+                    particle.style.setProperty('--tx', `${tx}px`);
+                    particle.style.setProperty('--ty', `${ty}px`);
+                    particle.style.left = `${left}%`;
+                    particle.style.top = `${top}%`;
+                    
+                    container.appendChild(particle);
+                }
             }
+            
+            // สร้างดอกไม้ไฟขนาดใหญ่ตรงกลาง
+            setTimeout(() => {
+                const largeFirework = document.createElement('div');
+                largeFirework.className = 'firework-large';
+                largeFirework.style.background = 'radial-gradient(circle, #ffffff, #fbbf24, #dc2626)';
+                container.appendChild(largeFirework);
+                
+                // สร้างอนุภาคประกายไฟเพิ่มเติม
+                const sparkleCount = 50;
+                for (let i = 0; i < sparkleCount; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'firework-sparkle';
+                    
+                    // สุ่มสีประกายไฟ
+                    const colors = ['#ffffff', '#fbbf24', '#dc2626', '#16a34a', '#3b82f6'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    sparkle.style.background = color;
+                    
+                    // สุ่มทิศทางและระยะทาง
+                    const angle = (i / sparkleCount) * Math.PI * 2;
+                    const distance = 200 + Math.random() * 150;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    
+                    sparkle.style.setProperty('--tx', `${tx}px`);
+                    sparkle.style.setProperty('--ty', `${ty}px`);
+                    
+                    container.appendChild(sparkle);
+                }
+            }, 300);
             
             // ซ่อนเอฟเฟกต์หลังจากจบแอนิเมชัน
             setTimeout(() => {
                 container.style.display = 'none';
-            }, 1000);
+            }, 2000);
         }
         
         // ส่ง Flex Message ไปยัง LINE
@@ -1307,10 +1430,8 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // แสดงเอฟเฟกต์พุ่งกลางจอ (เพิ่ม delay เล็กน้อยเพื่อให้เห็นชัดเจน)
-                    setTimeout(() => {
-                        createFireworkEffect();
-                    }, 500);
+                    // แสดงเอฟเฟกต์พุ่งกลางจอแบบเต็มหน้าจอ
+                    createFireworkEffect();
                     
                     // แสดงแอนิเมชันลอยกระทง
                     floatLotus(userWish, userName, userPicture);
@@ -1353,6 +1474,7 @@
                 this.classList.add('selected');
                 selectedKrathongType = parseInt(this.dataset.type);
                 updateLotusColor(selectedKrathongType);
+                updateProfileKrathongFrame(selectedKrathongType);
             });
         });
         
